@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FORGE - HCET Syndicate Tactical Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Screen Hologram Scanline Effect Overlay -->
+  <div class="scanlines"></div>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar hud-border">
+    <div class="logo">
+      <span class="logo-icon">⚡</span> FORGE <span class="logo-sub">SYNDICATE HUD v4.2</span>
+    </div>
+    <div class="nav-links">
+      <button class="nav-btn" onclick="showScreen('dashboard')">📡 Dashboard</button>
+      <button class="nav-btn" onclick="showScreen('map')">🌌 Galaxy Map</button>
+      <button class="nav-btn" onclick="showScreen('codex')">⚔️ Ancient Codex</button>
+      <button class="nav-btn" onclick="showScreen('missions')">🎯 Missions</button>
+    </div>
+  </nav>
+
+  <!-- ==================== SCREEN 1: DASHBOARD ==================== -->
+  <section id="dashboard" class="screen active">
+    <div class="dashboard-header hud-box">
+      <div>
+        <h2>⚡ COMMAND TACTICAL DASHBOARD</h2>
+        <p class="subtitle">DECENTRALIZED SYNDICATE NODE CONTROL</p>
+      </div>
+      <div id="networkStatusBadge" class="status-badge status-safe">STATUS: SECURE</div>
+    </div>
+
+    <div class="dash-grid">
+      <!-- Card 1: Jedi Identity & Passkey -->
+      <div class="dash-card hud-card">
+        <div class="hud-corner top-left"></div>
+        <div class="hud-corner top-right"></div>
+        
+        <h3>👤 RECRUIT IDENTITY & ROTARY KEY</h3>
+        <div class="user-profile-badge">
+          <div class="avatar-circle">J-77</div>
+          <div class="profile-meta">
+            <p><strong>Tag:</strong> JEDI-7704</p>
+            <p><strong>Tier:</strong> <span id="trustLevelText" class="highlight-cyan">Level 1 (Limited Access)</span></p>
+          </div>
+        </div>
+        
+        <label class="meter-label">TRIAL VERIFICATION PROGRESS:</label>
+        <div class="progress-bar-bg">
+          <div id="trustProgressBar" class="progress-bar-fill"></div>
+        </div>
+        
+        <div class="timer-box">
+          <span>🔑 ROTARY PASSKEY EXPIRATION:</span>
+          <span id="passkeyTimer" class="timer-display">05:00</span>
+        </div>
+
+        <div class="card-buttons">
+          <button onclick="refreshPasskey()">[ RENEW PASSKEY ]</button>
+          <button onclick="simulateTrustUpgrade()">[ VERIFY TRIAL LEVEL ]</button>
+        </div>
+      </div>
+
+      <!-- Card 2: Threat Controller -->
+      <div class="dash-card hud-card">
+        <div class="hud-corner top-left"></div>
+        <div class="hud-corner top-right"></div>
+
+        <h3>🚨 NETWORK THREAT LEVEL</h3>
+        <p class="small-text">Simulate network alerts during demo presentation:</p>
+        
+        <div class="btn-group">
+          <button class="btn-safe" onclick="setNetworkStatus('safe')">🟢 SAFE</button>
+          <button class="btn-warn" onclick="setNetworkStatus('warn')">🟡 WARN</button>
+          <button class="btn-danger" onclick="setNetworkStatus('danger')">🔴 LOCKDOWN</button>
+        </div>
+
+        <div class="graphic-gauge-box">
+          <div class="gauge-bar-label">
+            <span>IMPERIAL SENSOR RISK:</span>
+            <span id="riskPercentage" class="highlight-cyan">12%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="riskGaugeFill" class="gauge-fill safe-fill"></div>
+          </div>
+        </div>
+
+        <p id="statusDescription" class="status-desc">All hidden safe nodes operating under standard stealth protocols.</p>
+      </div>
+    </div>
+
+    <!-- Live Signals Feed -->
+    <div class="dash-card full-width hud-card">
+      <div class="hud-corner top-left"></div>
+      <div class="hud-corner top-right"></div>
+
+      <h3>📡 LIVE INTEL SIGNALS FEED</h3>
+      <ul id="signalsFeed" class="signals-list">
+        <li><span class="signal-tag safe-tag">[NODE 01]</span> Coruscant Safehouse beacon ping confirmed.</li>
+        <li><span class="signal-tag warn-tag">[NODE 04]</span> Imperial probe movement detected near Outer Rim.</li>
+        <li><span class="signal-tag safe-tag">[CODEX]</span> New recruit completed Level 1 glyph deciphering.</li>
+      </ul>
+      <button onclick="addLiveSignal()">[ DISPATCH NEW INTEL SIGNAL ]</button>
+    </div>
+  </section>
+
+  <!-- ==================== SCREEN 2: GALAXY MAP ==================== -->
+  <section id="map" class="screen">
+    <div class="map-header hud-box">
+      <div>
+        <h2>🌌 GALACTIC SAFE NODE NETWORK</h2>
+        <p class="subtitle">REAL-TIME SECTOR STEALTH TELEMETRY</p>
+      </div>
+      <div class="map-controls">
+        <button class="filter-btn active" onclick="filterMap('all')">ALL SECTORS</button>
+        <button class="filter-btn safe" onclick="filterMap('safe')">🟢 SAFE ZONES</button>
+        <button class="filter-btn warn" onclick="filterMap('uncertain')">🟡 UNCERTAIN</button>
+        <button class="filter-btn danger" onclick="filterMap('empire')">🔴 EMPIRE TERRITORY</button>
+      </div>
+    </div>
+
+    <div class="map-layout">
+      <!-- Tactical Holographic Star Map Canvas -->
+      <div class="star-map hud-card" id="starMap">
+        <div class="hud-corner top-left"></div>
+        <div class="hud-corner top-right"></div>
+        
+        <!-- Animated Hologram Radar Sweep -->
+        <div class="radar-sweep"></div>
+        <div class="map-grid-overlay"></div>
+
+        <!-- Constellation Vector Lines SVG -->
+        <svg class="constellation-svg">
+          <!-- Line Coruscant to Tatooine -->
+          <line x1="28%" y1="25%" x2="52%" y2="45%" class="route-line safe-route" />
+          <!-- Line Tatooine to Ilum -->
+          <line x1="52%" y1="45%" x2="75%" y2="65%" class="route-line safe-route" />
+          <!-- Line Lothal to Tatooine -->
+          <line x1="22%" y1="75%" x2="52%" y2="45%" class="route-line warn-route" />
+          <!-- Line Mustafar to Kuat -->
+          <line x1="82%" y1="20%" x2="58%" y2="80%" class="route-line danger-route" />
+        </svg>
+
+        <!-- Planet Node 1: Coruscant -->
+        <div class="planet-node safe" style="top: 25%; left: 28%;" 
+             onclick="inspectNode('Coruscant Sub-Node', 'Safe', 'Sector 01', '3 Active Safehouses', 95, 88, 12, '🟢 Node Online')">
+          <div class="pulse-ring"></div>
+          <span class="planet-dot"></span>
+          <span class="planet-label">Coruscant</span>
+        </div>
+
+        <!-- Planet Node 2: Ilum -->
+        <div class="planet-node safe" style="top: 65%; left: 75%;" 
+             onclick="inspectNode('Ilum Caverns', 'Safe', 'Sector 07', '1 Deep Sanctuary', 98, 92, 5, '🟢 Node Online')">
+          <div class="pulse-ring"></div>
+          <span class="planet-dot"></span>
+          <span class="planet-label">Ilum</span>
+        </div>
+
+        <!-- Planet Node 3: Tatooine -->
+        <div class="planet-node uncertain" style="top: 45%; left: 52%;" 
+             onclick="inspectNode('Tatooine Outpost', 'Uncertain', 'Sector 04', '2 Contact Points', 60, 54, 58, '🟡 Caution Advised')">
+          <div class="pulse-ring"></div>
+          <span class="planet-dot"></span>
+          <span class="planet-label">Tatooine</span>
+        </div>
+
+        <!-- Planet Node 4: Lothal -->
+        <div class="planet-node uncertain" style="top: 75%; left: 22%;" 
+             onclick="inspectNode('Lothal Relay', 'Uncertain', 'Sector 03', '1 Hidden Tower', 45, 40, 65, '🟡 Signal Fluctuating')">
+          <div class="pulse-ring"></div>
+          <span class="planet-dot"></span>
+          <span class="planet-label">Lothal</span>
+        </div>
+
+        <!-- Planet Node 5: Mustafar -->
+        <div class="planet-node empire" style="top: 20%; left: 82%;" 
+             onclick="inspectNode('Mustafar Citadel', 'Empire', 'Sector 12', '0 Safehouses', 0, 15, 98, '🔴 CRITICAL DANGER')">
+          <div class="pulse-ring"></div>
+          <span class="planet-dot"></span>
+          <span class="planet-label">Mustafar</span>
+        </div>
+
+        <!-- Planet Node 6: Kuat -->
+        <div class="planet-node empire" style="top: 80%; left: 58%;" 
+             onclick="inspectNode('Kuat Shipyards', 'Empire', 'Sector 09', '0 Safehouses', 0, 10, 92, '🔴 LOCKOUT IN EFFECT')">
+          <div class="pulse-ring"></div>
+          <span class="planet-dot"></span>
+          <span class="planet-label">Kuat System</span>
+        </div>
+      </div>
+
+      <!-- Tactical Visual Inspector Panel -->
+      <div class="inspector-panel hud-card" id="inspectorPanel">
+        <div class="hud-corner top-left"></div>
+        <div class="hud-corner top-right"></div>
+
+        <h3 id="planetTitle">📡 Select Star System</h3>
+        <p class="sector-text" id="planetSector">Click any node on the galaxy map to load telemetry graphs.</p>
+        
+        <div id="planetDetails" style="display: none;" class="details-body">
+          <div class="info-row"><strong>Security Status:</strong> <span id="planetStatusBadge">---</span></div>
+          <div class="info-row"><strong>Syndicate Outposts:</strong> <span id="planetOutposts">---</span></div>
+          
+          <!-- Graphic Visual Meters -->
+          <div class="graphic-telemetry">
+            <div class="meter-group">
+              <div class="meter-label"><span>STEALTH SHIELDING:</span> <span id="shieldVal">0%</span></div>
+              <div class="progress-bar-bg"><div id="shieldBar" class="progress-bar-fill"></div></div>
+            </div>
+
+            <div class="meter-group">
+              <div class="meter-label"><span>BEACON SIGNAL STRENGTH:</span> <span id="signalVal">0%</span></div>
+              <div class="progress-bar-bg"><div id="signalBar" class="progress-bar-fill"></div></div>
+            </div>
+
+            <div class="meter-group">
+              <div class="meter-label"><span>IMPERIAL THREAT INDEX:</span> <span id="threatVal">0%</span></div>
+              <div class="progress-bar-bg"><div id="threatBar" class="gauge-fill danger-fill"></div></div>
+            </div>
+          </div>
+
+          <button class="action-btn" onclick="pingSystemBeacon()">[ ESTABLISH ENCRYPTED BEACON ]</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SCREEN 3: ASTERION CODEX CHAMBER ==================== -->
+  <section id="codex" class="screen">
+    <div class="codex-container hud-card">
+      <div class="hud-corner top-left"></div>
+      <div class="hud-corner top-right"></div>
+
+      <h2>⚔️ THE ASTERION CODEX CHAMBER</h2>
+      <blockquote class="inscription">
+        “The silent Stone remembers before the Eye awakens. The Gate opens for the Flame. The Moon follows the path unseen.”
+      </blockquote>
+
+      <div class="codex-grid-display">
+        <span class="glyph-badge">⟐ Stone (1)</span>
+        <span class="glyph-badge">☉ Eye (2)</span>
+        <span class="glyph-badge">◇ Gate (3)</span>
+        <span class="glyph-badge">△ Flame (4)</span>
+        <span class="glyph-badge">☾ Moon (5)</span>
+      </div>
+
+      <hr class="divider">
+
+      <!-- Encoder Box -->
+      <div class="cipher-box">
+        <h3>1. Encode Plain Message</h3>
+        <input type="text" id="plainInput" placeholder="Enter message (e.g., MEET AT DAWN)">
+        <button onclick="runEncoder()">[ ENCODE TO HOLO-GLYPHS ]</button>
+        
+        <div class="result-box">
+          <label>Encoded Glyph Message:</label>
+          <div id="encodedOutput" class="glyph-output">◇☉ ⟐☾ ⟐☾ △△  ·  ⟐⟐ △△</div>
+        </div>
+      </div>
+
+      <!-- Decoder Box & Dual Force Protocol -->
+      <div class="cipher-box">
+        <h3>2. Decode Glyph Message</h3>
+        <input type="text" id="glyphInput" placeholder="Paste glyphs (e.g., ◇☉ ⟐☾ ⟐☾ △△)">
+        
+        <div class="protocol-toggle">
+          <input type="checkbox" id="dualForceCheck">
+          <label for="dualForceCheck">🔒 Require Dual Force Protocol (2 Jedi Authentication)</label>
+        </div>
+
+        <button onclick="runDecoder()">[ REVEAL ANCIENT MESSAGE ]</button>
+
+        <div class="result-box">
+          <label>Decoded Plain Text:</label>
+          <div id="decodedOutput" class="plain-output">---</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SCREEN 4: MISSIONS ==================== -->
+  <section id="missions" class="screen">
+    <h2>🎯 ACTIVE SYNDICATE MISSIONS</h2>
+    <div class="dash-grid">
+      <div class="dash-card hud-card">
+        <h3>Mission #104: Kyber Crystal Supply Run</h3>
+        <p><strong>Required Trust Tier:</strong> Level 2</p>
+        <p>Transport kyber core safely past Outer Rim patrols.</p>
+        <button onclick="alert('Mission Assigned to your Jedi Profile!')">[ ACCEPT MISSION ]</button>
+      </div>
+      <div class="dash-card hud-card">
+        <h3>Mission #108: Dead Drop Retrieval</h3>
+        <p><strong>Required Trust Tier:</strong> Level 1</p>
+        <p>Extract hidden memory drive from Coruscant Lower Levels.</p>
+        <button onclick="alert('Mission Assigned to your Jedi Profile!')">[ ACCEPT MISSION ]</button>
+      </div>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
